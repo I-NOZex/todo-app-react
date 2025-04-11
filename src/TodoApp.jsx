@@ -1,8 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 const TodoApp = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = localStorage.getItem('todos');
+    return savedTodos ? JSON.parse(savedTodos) : [];
+  });
+
   const [task, setTask] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const totalTasks = useMemo(() => todos.length, [todos]);
   const completedTasks = useMemo(
@@ -28,6 +36,10 @@ const TodoApp = () => {
     const newTodos = todos.filter((_, i) => i !== index);
     setTodos(newTodos);
   };
+
+  if (!todos) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
