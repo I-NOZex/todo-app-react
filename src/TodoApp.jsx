@@ -1,45 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const TodoApp = () => {
-  /*
-  const [todos, setTodos] = [[], () => {}];
-  const [task, setTask] = ['', () => {}];
+  const [task, setTask] = useState('');
+  const [todos, setTodos] = useState([]);
 
-  const totalTasks = null;
-  const completedTasks = null;
+  const handleInputChange = (event) => {
+    setTask(event.target.value);
+  };
 
-  const handleAddTask = () => {};
+  const handleAddTask = (event) => {
+    event.preventDefault();
+    if (task.trim() === '') return;
 
-  const toggleTaskDone = () => {};
+    setTodos([...todos, { text: task, isCompleted: false }]);
+    setTask('');
+  };
 
-  const handleDeleteTask = () => {};
+  const handleComplete = (index) => {
+    const updatedTodos = [...todos];
+    updatedTodos[index].isCompleted = !updatedTodos[index].isCompleted;
+    setTodos(updatedTodos);
+  };
 
-  const handleFormSubmit = () => {};
-
-  const handleFormInputChange = () => {};
-  */
+  const handleDelete = (index) => {
+    const updatedTodos = [...todos];
+    updatedTodos.splice(index, 1);
+    setTodos(updatedTodos);
+  };
 
   return (
     <div>
       <form>
         <fieldset role='group'>
-          <input type='text' value='' required />
-          <button className='btn-add' type='submit'>
+          <input
+            type='text'
+            value={task}
+            required
+            onChange={handleInputChange}
+          />
+          <button className='btn-add' type='submit' onClick={handleAddTask}>
             Add Task
           </button>
         </fieldset>
         <p>
-          Total: {} | Completed: {}
+          Total: {todos.length} | Completed:{' '}
+          {todos.filter((todo) => todo.isCompleted).length}
         </p>
       </form>
       <ul className='todo-list'>
-        <li>
-          <label>
-            <input type='checkbox' checked={false} />
-            <span>{'Make this list dynamic!'}</span>
-          </label>
-          <button className='btn-remove'>Delete</button>
-        </li>
+        {todos.map((todo, index) => (
+          <li>
+            <label key={index}>
+              <input
+                type='checkbox'
+                checked={todo.isCompleted}
+                onClick={() => handleComplete(index)}
+              />
+              <span>{todo.text}</span>
+            </label>
+            <button className='btn-remove' onClick={() => handleDelete(index)}>
+              Delete
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
   );
