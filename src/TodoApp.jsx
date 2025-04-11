@@ -28,6 +28,7 @@ const TodoApp = () => {
     };
 
     useEffect(() => {
+        // TODO: improve the localstorage set
         localStorage.setItem('todos', JSON.stringify(todos))
     }, [todos])
 
