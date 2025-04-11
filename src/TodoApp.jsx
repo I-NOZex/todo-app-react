@@ -1,45 +1,71 @@
 import React from 'react';
 
+import { useState } from 'react';
+
+import TodoElement from './toDoElement.jsx';
+
 const TodoApp = () => {
-  /*
-  const [todos, setTodos] = [[], () => {}];
-  const [task, setTask] = ['', () => {}];
+  const [task, setTask] = useState('');
 
-  const totalTasks = null;
-  const completedTasks = null;
+  const [todos, setTodos] = useState([]);
 
-  const handleAddTask = () => {};
+  const handleFormInputChange = (event) => {
+    setTask(event.target.value);
 
-  const toggleTaskDone = () => {};
+    console.log(task);
+  };
 
-  const handleDeleteTask = () => {};
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
 
-  const handleFormSubmit = () => {};
+    setTodos((prevTodos) => [...prevTodos, { task, isCompleted: false }]);
 
-  const handleFormInputChange = () => {};
-  */
+    setTask('');
+  };
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleFormSubmit}>
         <fieldset role='group'>
-          <input type='text' value='' required />
+          <input
+            type='text'
+            required
+            value={task}
+            onInput={handleFormInputChange}
+          />
+
           <button className='btn-add' type='submit'>
             Add Task
           </button>
         </fieldset>
+
         <p>
           Total: {} | Completed: {}
         </p>
       </form>
+
       <ul className='todo-list'>
-        <li>
-          <label>
-            <input type='checkbox' checked={false} />
-            <span>{'Make this list dynamic!'}</span>
-          </label>
-          <button className='btn-remove'>Delete</button>
-        </li>
+        {todos.map((todo, index) => (
+          <TodoElement
+            key={index}
+            task={todo.task}
+            isCompleted={todo.isCompleted}
+            onToggle={() => {
+              setTodos((prevTodos) => {
+                const newTodos = [...prevTodos];
+
+                newTodos[index].isCompleted = !newTodos[index].isCompleted;
+
+                return newTodos;
+              });
+            }}
+            onDelete={() => {
+              setTodos((prevTodos) =>
+                prevTodos.filter((nothingToWorryBout, i) => i !== index)
+              );
+            }}
+          />
+        ))}
       </ul>
     </div>
   );
