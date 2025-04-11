@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 const TodoApp = () => {
     const [task, setTask] = useState('');
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState(JSON.parse(localStorage.getItem('todos')) || []);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -28,13 +28,12 @@ const TodoApp = () => {
     };
 
     useEffect(() => {
-        // TODO: improve the localstorage set
         localStorage.setItem('todos', JSON.stringify(todos))
     }, [todos])
 
     useEffect(() => {
         const localData = JSON.parse(localStorage.getItem('todos'));
-        setTodos(prevState => [...prevState, ...localData])
+        setTodos(localData)
     }, [])
 
     return (<div>
